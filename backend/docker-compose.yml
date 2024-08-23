@@ -1,4 +1,4 @@
-version: "3"
+version: "3.9"
 services:
   strapi:
     container_name: strapi
@@ -33,26 +33,48 @@ services:
 
   strapiDB:
     container_name: strapiDB
-    platform: linux/amd64 #for platform error on Apple M1 chips
-    restart: unless-stopped
+    platform: linux/amd64
+    restart: always
     env_file: .env
-    image: mysql:5.7
-    command: --default-authentication-plugin=mysql_native_password
+    image: mysql:8.0
+    command: >
+      mysqld --bind-address=0.0.0.0 --host_cache_size=0 --authentication_policy=mysql_native_password ${ENVIRONMENT_COMMAND}
     environment:
       MYSQL_USER: ${DATABASE_USERNAME}
-      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
       MYSQL_PASSWORD: ${DATABASE_PASSWORD}
       MYSQL_DATABASE: ${DATABASE_NAME}
     volumes:
       - strapi-data:/var/lib/mysql
-      #- ./data:/var/lib/mysql # if you want to use a bind folder
+      - ./data:/var/lib/mysql
+      - ./certs:/etc/mysql/certs
     ports:
       - "3306:3306"
     networks:
       - strapi
+    depends_on:
+      - certbot
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    command:
+      - --remove-orphans
+    entrypoint: /bin/sh -c " if [ '$${ENVIRONMENT}' = 'production' ] && [ ! -f /etc/letsencrypt/live/${DOMAIN}/fullchain.pem ]; then certbot certonly --standalone --noninteractive --agree-tos --email ${EMAIL} -d ${DOMAIN}; cp /etc/letsencrypt/live/${DOMAIN}/fullchain.pem /certs/mysql.crt; cp /etc/letsencrypt/live/${DOMAIN}/privkey.pem /certs/mysql.key; cp /etc/letsencrypt/live/${DOMAIN}/chain.pem /certs/ca.crt; fi"
+    volumes:
+      - ./certs:/certs
+      - ./letsencrypt:/etc/letsencrypt
+    environment:
+      - DOMAIN=yourdomain.com
+      - EMAIL=youremail@domain.com
+    networks:
+      - strapi
+    restart: "no"
 
 volumes:
   strapi-data:
+  letsencrypt:
+
 
 networks:
   strapi:

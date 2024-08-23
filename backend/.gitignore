@@ -9,6 +9,9 @@ Icon
 .Spotlight-V100
 .Trashes
 ._*
+certs
+data
+letsencrypt
 
 
 ############################
