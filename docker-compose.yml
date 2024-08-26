@@ -5,7 +5,7 @@ services:
     build: .
     image: strapi:latest
     restart: unless-stopped
-    env_file: ./frontend/.env
+    env_file: ./backend/.env
     environment:
       DATABASE_CLIENT: ${DATABASE_CLIENT}
       DATABASE_HOST: strapiDB
