@@ -35,7 +35,7 @@ services:
     container_name: strapiDB
     platform: linux/amd64
     restart: always
-    env_file: .env
+    env_file: ./backend/.env
     image: mysql:8.0
     command: >
       mysqld --bind-address=0.0.0.0 --host_cache_size=0 --authentication_policy=mysql_native_password ${ENVIRONMENT_COMMAND}
@@ -62,8 +62,8 @@ services:
       - --remove-orphans
     entrypoint: /bin/sh -c " if [ '$${ENVIRONMENT}' = 'production' ] && [ ! -f /etc/letsencrypt/live/${DOMAIN}/fullchain.pem ]; then certbot certonly --standalone --noninteractive --agree-tos --email ${EMAIL} -d ${DOMAIN}; cp /etc/letsencrypt/live/${DOMAIN}/fullchain.pem /certs/mysql.crt; cp /etc/letsencrypt/live/${DOMAIN}/privkey.pem /certs/mysql.key; cp /etc/letsencrypt/live/${DOMAIN}/chain.pem /certs/ca.crt; fi"
     volumes:
-      - ./certs:/certs
-      - ./letsencrypt:/etc/letsencrypt
+      - ./backend/certs:/certs
+      - ./backend/letsencrypt:/etc/letsencrypt
     environment:
       - DOMAIN=yourdomain.com
       - EMAIL=youremail@domain.com
