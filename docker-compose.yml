@@ -5,7 +5,7 @@ services:
     build: .
     image: strapi:latest
     restart: unless-stopped
-    env_file: .env
+    env_file: ./frontend/.env
     environment:
       DATABASE_CLIENT: ${DATABASE_CLIENT}
       DATABASE_HOST: strapiDB
@@ -18,12 +18,12 @@ services:
       APP_KEYS: ${APP_KEYS}
       NODE_ENV: ${NODE_ENV}
     volumes:
-      - ./config:/opt/app/config
-      - ./src:/opt/app/src
-      - ./package.json:/opt/package.json
-      - ./yarn.lock:/opt/yarn.lock
-      - ./.env:/opt/app/.env
-      - ./public/uploads:/opt/app/public/uploads
+      - ./frontend/config:/opt/app/config
+      - ./frontend/src:/opt/app/src
+      - ./frontend/package.json:/opt/package.json
+      - ./frontend/yarn.lock:/opt/yarn.lock
+      - ./frontend/.env:/opt/app/.env
+      - ./frontend/public/uploads:/opt/app/public/uploads
     ports:
       - "1337:1337"
     networks:
@@ -46,8 +46,8 @@ services:
       MYSQL_DATABASE: ${DATABASE_NAME}
     volumes:
       - strapi-data:/var/lib/mysql
-      - ./data:/var/lib/mysql
-      - ./certs:/etc/mysql/certs
+      - ./frontend/data:/var/lib/mysql
+      - ./frontend/certs:/etc/mysql/certs
     ports:
       - "3306:3306"
     networks:
@@ -74,7 +74,6 @@ services:
 volumes:
   strapi-data:
   letsencrypt:
-
 
 networks:
   strapi:
