@@ -1,9 +1,12 @@
-version: "3.9"
+## RUN with: docker-compose --env-file ./backend/.env up --build
+
 services:
   strapi:
     container_name: strapi
-    build: .
-    image: strapi:latest
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: strapi/strapi:latest
     restart: unless-stopped
     env_file: ./backend/.env
     environment:
@@ -18,12 +21,12 @@ services:
       APP_KEYS: ${APP_KEYS}
       NODE_ENV: ${NODE_ENV}
     volumes:
-      - ./frontend/config:/opt/app/config
-      - ./frontend/src:/opt/app/src
-      - ./frontend/package.json:/opt/package.json
-      - ./frontend/yarn.lock:/opt/yarn.lock
-      - ./frontend/.env:/opt/app/.env
-      - ./frontend/public/uploads:/opt/app/public/uploads
+      - ./backend/config:/opt/app/config
+      - ./backend/src:/opt/app/src
+      - ./backend/package.json:/opt/package.json
+      - ./backend/yarn.lock:/opt/yarn.lock
+      - ./backend/.env:/opt/app/.env
+      - ./backend/public/uploads:/opt/app/public/uploads
     ports:
       - "1337:1337"
     networks:
@@ -45,9 +48,9 @@ services:
       MYSQL_PASSWORD: ${DATABASE_PASSWORD}
       MYSQL_DATABASE: ${DATABASE_NAME}
     volumes:
-      - strapi-data:/var/lib/mysql
-      - ./frontend/data:/var/lib/mysql
-      - ./frontend/certs:/etc/mysql/certs
+      - ./backend/strapi-data:/var/lib/mysql
+      - ./backend/data:/var/lib/mysql
+      - ./backend/certs:/etc/mysql/certs
     ports:
       - "3306:3306"
     networks:
@@ -60,7 +63,7 @@ services:
     container_name: certbot
     command:
       - --remove-orphans
-    entrypoint: /bin/sh -c " if [ '$${ENVIRONMENT}' = 'production' ] && [ ! -f /etc/letsencrypt/live/${DOMAIN}/fullchain.pem ]; then certbot certonly --standalone --noninteractive --agree-tos --email ${EMAIL} -d ${DOMAIN}; cp /etc/letsencrypt/live/${DOMAIN}/fullchain.pem /certs/mysql.crt; cp /etc/letsencrypt/live/${DOMAIN}/privkey.pem /certs/mysql.key; cp /etc/letsencrypt/live/${DOMAIN}/chain.pem /certs/ca.crt; fi"
+    entrypoint: /bin/sh -c " if [ '${ENVIRONMENT}' = 'production' ] && [ ! -f /etc/letsencrypt/live/${DOMAIN}/fullchain.pem ]; then certbot certonly --standalone --noninteractive --agree-tos --email ${EMAIL} -d ${DOMAIN}; cp /etc/letsencrypt/live/${DOMAIN}/fullchain.pem /certs/mysql.crt; cp /etc/letsencrypt/live/${DOMAIN}/privkey.pem /certs/mysql.key; cp /etc/letsencrypt/live/${DOMAIN}/chain.pem /certs/ca.crt; fi"
     volumes:
       - ./backend/certs:/certs
       - ./backend/letsencrypt:/etc/letsencrypt

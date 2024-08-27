@@ -29,6 +29,6 @@ EXPOSE 3000
 ENV NODE_ENV=production
 
 # Start the Next.js application
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]
 # or if you're using yarn
 # CMD ["yarn", "start"]
