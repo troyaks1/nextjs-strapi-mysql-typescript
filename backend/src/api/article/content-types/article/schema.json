@@ -1,10 +1,10 @@
 {
   "kind": "singleType",
-  "collectionName": "home_pages",
+  "collectionName": "articles",
   "info": {
-    "singularName": "home-page",
-    "pluralName": "home-pages",
-    "displayName": "Home Page",
+    "singularName": "article",
+    "pluralName": "articles",
+    "displayName": "Article",
     "description": ""
   },
   "options": {
@@ -18,11 +18,10 @@
     "description": {
       "type": "text"
     },
-    "blocks": {
+    "blocksarticle": {
       "type": "dynamiczone",
       "components": [
-        "layout.hero-section",
-        "layout.features-section"
+        "card-title.card-title"
       ]
     }
   }
