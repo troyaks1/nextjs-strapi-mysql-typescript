@@ -1,5 +1,4 @@
-import { getHomePageData } from "@/data/loaders";
-
+import { getHomePageData } from "@/lib/loaders";
 import { HeroSection } from "@/components/custom/HeroSection";
 import { FeatureSection } from "@/components/custom/FeaturesSection";
 

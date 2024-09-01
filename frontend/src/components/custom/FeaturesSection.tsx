@@ -33,7 +33,7 @@ export function FeatureSection({
 }) {
   const { feature } = data;
   return (
-    <div className="">
+    <div className="bg-white">
       <div className="flex-1">
         <section className="container px-4 py-6 mx-auto md:px-6 lg:py-24">
           <div className="grid gap-8 md:grid-cols-3">
@@ -44,7 +44,7 @@ export function FeatureSection({
               >
                 {getIcon(feature.icon)}
                 <h2 className="mb-4 text-2xl font-bold">{feature.heading}</h2>
-                <p className="text-gray-500">
+                <p className="text-gray-600">
                   {feature.subHeading}
                 </p>
               </div>

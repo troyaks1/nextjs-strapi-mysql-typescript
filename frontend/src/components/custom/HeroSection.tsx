@@ -24,7 +24,7 @@ interface HeroSectionProps {
 
 export function HeroSection({ data }: { readonly data: HeroSectionProps }) {
   const { heading, subHeading, image, link } = data;
-  const imageURL = "http://localhost:1337" + image.url;
+  const imageURL = image.url ? "http://localhost:1337" + image.url : null;
   return (
     <header className="relative h-[600px] overflow-hidden">
       <StrapiImage
@@ -34,8 +34,8 @@ export function HeroSection({ data }: { readonly data: HeroSectionProps }) {
         height={1080}
         width={1920}
       />
-      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white bg-black bg-opacity-20">
-        <h1 className="text-4xl font-bold md:text-5xl lg:text-6xl">
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white bg-black bg-opacity-50">
+        <h1 className="text-4xl font-bold md:text-4xl lg:text-6xl">
           {heading}
         </h1>
         <p className="mt-4 text-lg md:text-xl lg:text-2xl">

@@ -2,7 +2,7 @@ import Image from "next/image";
 import { getStrapiMedia } from "@/lib/utils";
 
 interface StrapiImageProps {
-  src: string;
+  src: string | null;
   alt: string;
   height: number;
   width: number;
@@ -16,7 +16,6 @@ export function StrapiImage({
   width,
   className,
 }: Readonly<StrapiImageProps>) {
-  if (!src) return null;
   const imageUrl = getStrapiMedia(src);
   const imageFallback = `https://placehold.co/${width}x${height}`;
 
