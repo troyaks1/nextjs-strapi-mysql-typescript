@@ -23,20 +23,23 @@ function selectSocialIcon(url: string) {
   if (url.includes("youtube")) return <YoutubeIcon className="h-6 w-6" />;
   if (url.includes("twitter")) return <TwitterIcon className="h-6 w-6" />;
   if (url.includes("github")) return <GithubIcon className="h-6 w-6" />;
+  if (url.includes("linkedin")) return <LinkedinIcon className="h-6 w-6" />;
+  if (url.includes("instagram")) return <InstagramIcon className="h-6 w-6" />;
   return null;
 }
+
 
 export function Footer({ data }: Readonly<FooterProps>) {
   const { logoText, socialLink, text } = data;
   return (
-    <div className="dark bg-gray-900 text-white py-8">
+    <div className="dark bg-gray-900 text-white py-4">
       <div className="container mx-auto px-4 md:px-6 flex flex-col md:flex-row items-center justify-between">
         <Logo text={logoText.text} />
         <p className="mt-4 md:mt-0 text-sm text-gray-300">{text}</p>
         <div className="flex items-center space-x-4">
           {socialLink.map((link) => {
             return (
-              <Link className="text-white hover:text-gray-300" href={link.url}>
+              <Link key={link.id} className="text-white hover:text-gray-300" href={link.url}>
                 {selectSocialIcon(link.url)}
                 <span className="sr-only">Visit us at {link.text}</span>
               </Link>
@@ -106,3 +109,46 @@ function YoutubeIcon(props: any) {
     </svg>
   );
 }
+
+function LinkedinIcon(props: any) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z" />
+      <rect x="2" y="9" width="4" height="12" />
+      <circle cx="4" cy="4" r="2" />
+    </svg>
+  );
+}
+
+function InstagramIcon(props: any) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" y1="6.5" x2="17.5" y2="6.5" />
+    </svg>
+  );
+}
+

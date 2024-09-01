@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { fetchData } from "./loaders";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -52,7 +53,7 @@ export async function getStrapiData(path: string, query: string) {
   url.search = query;
 
   try {
-    const response = await fetch(url.href, { cache: 'no-store' });
+    const response = await fetchData(url.href);
     const data = await response.json();
     const flattenedData = flattenAttributes(data);
     return flattenedData;
@@ -62,7 +63,7 @@ export async function getStrapiData(path: string, query: string) {
 }
 
 export function getStrapiURL() {
-  return process.env.NEXT_PUBLIC_STRAPI_URL ?? "http://localhost:1337";
+  return process?.env?.NEXT_PUBLIC_STRAPI_URL ?? "http://localhost:1337";
 }
 
 export function getStrapiMedia(url: string | null) {
