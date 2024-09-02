@@ -1,12 +1,6 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
-import { fetchData } from "./loaders";
+import { unstable_noStore as noStoreCache } from 'next/cache';
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
-
-export function flattenAttributes(data: any): any {
+export function flattenStrapiAttributes(data: any): any {
   // Check if data is a plain object; return as is if not
   if (
     typeof data !== "object" ||
@@ -19,7 +13,7 @@ export function flattenAttributes(data: any): any {
 
   // If data is an array, apply flattenAttributes to each element and return as array
   if (Array.isArray(data)) {
-    return data.map((item) => flattenAttributes(item));
+    return data.map((item) => flattenStrapiAttributes(item));
   }
 
   // Initialize an object with an index signature for the flattened structure
@@ -36,30 +30,14 @@ export function flattenAttributes(data: any): any {
       typeof data[key] === "object" &&
       !Array.isArray(data[key])
     ) {
-      Object.assign(flattened, flattenAttributes(data[key]));
+      Object.assign(flattened, flattenStrapiAttributes(data[key]));
     } else {
       // For other keys, copy the value, applying flattenAttributes if it's an object
-      flattened[key] = flattenAttributes(data[key]);
+      flattened[key] = flattenStrapiAttributes(data[key]);
     }
   }
 
   return flattened;
-}
-
-export async function getStrapiData(path: string, query: string) {
-  const baseUrl = getStrapiURL();
-
-  const url = new URL(path, baseUrl);
-  url.search = query;
-
-  try {
-    const response = await fetchData(url.href);
-    const data = await response.json();
-    const flattenedData = flattenAttributes(data);
-    return flattenedData;
-  } catch (error) {
-    console.error(error);
-  }
 }
 
 export function getStrapiURL() {
@@ -71,4 +49,24 @@ export function getStrapiMedia(url: string | null) {
   if (url.startsWith("data:")) return url;
   if (url.startsWith("http") || url.startsWith("//")) return url;
   return `${getStrapiURL()}${url}`;
+}
+
+export async function fetchStrapiData(url: string) {
+  noStoreCache(); // disable caching for components that use this function
+  const authToken = null; // we will implement this getAuthToken() later
+  const headers = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${authToken}`,
+    },
+  };
+  try {
+    const response = await fetch(url, authToken ? headers : {});
+    const data = await response.json();
+    return flattenStrapiAttributes(data);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error; // or return null;
+  }
 }
