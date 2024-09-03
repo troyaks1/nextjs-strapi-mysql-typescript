@@ -43,9 +43,13 @@ export function ProfileForm({
   readonly data: ProfileFormProps;
   readonly className?: string;
 }) {
-
+  const updateProfileWithId = updateProfileAction.bind(null, data.id);
+  const [formState, formAction] = useFormState(
+    updateProfileWithId,
+    INITIAL_STATE
+  );
   return (
-    <form
+    <form action={formAction}
       className={cn("space-y-4", className)}>
       <div className="space-y-4 grid ">
         <div className="grid grid-cols-3 gap-4">
@@ -92,6 +96,7 @@ export function ProfileForm({
       <div className="flex justify-end">
         <SubmitButton text="Update Profile" loadingText="Saving Profile" />
       </div>
+      <StrapiErrors error={formState?.strapiErrors} />
     </form>
   );
 }

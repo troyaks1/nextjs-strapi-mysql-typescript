@@ -41,14 +41,32 @@ export function flattenStrapiAttributes(data: any): any {
 }
 
 export function getStrapiURL() {
-  return process?.env?.NEXT_PUBLIC_STRAPI_URL ?? "http://localhost:1337";
+  const url = process?.env?.NEXT_PUBLIC_STRAPI_URL ?? "http://localhost:1337";
+  return url
 }
 
 export function getStrapiMedia(url: string | null) {
   if (url == null) return null;
-  if (url.startsWith("data:")) return url;
-  if (url.startsWith("http") || url.startsWith("//")) return url;
-  return `${getStrapiURL()}${url}`;
+
+  // Trim any potential leading/trailing whitespace or hidden characters.
+  url = url.trim();
+
+  // Explicitly handle both "http" and "https"
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  }
+
+  // Handle URLs that start with "//"
+  if (url.startsWith("//")) {
+    return url;
+  }
+
+  // Ensure that relative URLs start with a leading slash.
+  const cleanedUrl = url.startsWith("/") ? url : `/${url}`;
+
+  // Construct the full URL using the Strapi base URL.
+  const strapiUrl = getStrapiURL();
+  return `${strapiUrl}${cleanedUrl}`;
 }
 
 export async function fetchStrapiData(url: string) {

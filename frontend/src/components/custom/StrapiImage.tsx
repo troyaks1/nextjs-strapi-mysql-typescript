@@ -16,12 +16,14 @@ export function StrapiImage({
   width,
   className,
 }: Readonly<StrapiImageProps>) {
+  console.dir("Source image path: ", src);
   const imageUrl = getStrapiMedia(src);
   const imageFallback = `https://placehold.co/${width}x${height}`;
-
+  const finalUrl = imageUrl ?? imageFallback;
+  console.dir("Final Image URL: ", finalUrl)
   return (
     <Image
-      src={imageUrl ?? imageFallback}
+      src={finalUrl}
       alt={alt}
       height={height}
       width={width}

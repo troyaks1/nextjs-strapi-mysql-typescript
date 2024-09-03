@@ -1,34 +1,25 @@
 # Use an official Node.js runtime as the base image
 FROM node:18-alpine
 
+RUN mkdir -p /app
+
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json (or yarn.lock) files
-COPY package*.json ./
-# or if you're using yarn
-# COPY yarn.lock ./
+# Set environment variable to production
+ENV NODE_ENV=production
+
+# Copy the application files to the container
+COPY . .
 
 # Install dependencies
 RUN npm install
-# or if you're using yarn
-# RUN yarn install
 
-# Copy the rest of the application code
-COPY . .
-
-# Build the Next.js project
+# Build the Next.js app
 RUN npm run build
-# or if you're using yarn
-# RUN yarn build
 
-# Expose the port on which your app will run
+# Expose the application on port 3000
 EXPOSE 3000
 
-# Set the environment variable for production
-ENV NODE_ENV=production
-
-# Start the Next.js application
-CMD ["npm", "run", "start"]
-# or if you're using yarn
-# CMD ["yarn", "start"]
+# Start the Next.js server
+ENTRYPOINT ["npm", "run", "start"]
