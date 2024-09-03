@@ -19,7 +19,7 @@ export function StrapiImage({
   console.dir("Source image path: ", src);
   const imageUrl = getStrapiMedia(src);
   const imageFallback = `https://placehold.co/${width}x${height}`;
-  const finalUrl = imageUrl ?? imageFallback;
+  const finalUrl = imageUrl ?? imageFallback;0
   console.dir("Final Image URL: ", finalUrl)
   return (
     <Image
